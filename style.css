@@ -1,0 +1,45 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+}
+
+.calculator {
+  width: 500px;
+  padding: 15px;
+  border: 2px solid black;
+}
+
+.screen {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 50px;
+  padding: 10px;
+  font-weight: 400;
+  font-size: 20px;
+  border: 1px solid black;
+  margin-bottom: 10px;
+}
+
+.btns-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.calc-btn {
+  font-family: inherit;
+  flex-basis: 109px;
+  font-size: 16px;
+  font-weight: 300;
+  padding: 8px;
+}
+
+.btn-half {
+  flex-basis: 228px;
+}

@@ -20,6 +20,9 @@ function determineBtnType(btnText) {
 function handleSymbol(symbol) {
     switch(symbol) {
         case '.':
+            if (screenText.includes('.')) {
+                return;
+            }
             screenText += symbol;
             renderScreen();
             break;
@@ -51,7 +54,11 @@ function handleSymbol(symbol) {
             if (!previousOperator || screenText === '') {
                 return;
             }
-            handleMath(symbol);
+            const intScreenText = parseFloat(screenText);
+            operate(intScreenText);
+            screenText = runningTotal.toString();
+            renderScreen();
+            previousOperator = null;
             break;
     }
 }

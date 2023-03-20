@@ -1,9 +1,7 @@
-const btnsContainer = document.querySelector('.btns-container')
-let screenText = '';
+const btnsContainer = document.querySelector('.btns-container');
 let screen = document.querySelector('.screen');
-let lastOperator;
-let num1;
-let num2;
+let screenText = '';
+let previousOperator = null;
 let runningTotal = 0;
 
 btnsContainer.addEventListener('click', e => {
@@ -21,6 +19,10 @@ function determineBtnType(btnText) {
 
 function handleSymbol(symbol) {
     switch(symbol) {
+        case '.':
+            screenText += symbol;
+            renderScreen();
+            break;
         case '←':
             if (screenText.length === 1) {
                 screenText = ''
@@ -31,6 +33,8 @@ function handleSymbol(symbol) {
             renderScreen();
             break;
         case 'C':
+            previousOperator = null;
+            runningTotal = 0;
             screenText = '';
             renderScreen();
             break;
@@ -38,26 +42,16 @@ function handleSymbol(symbol) {
         case '×':
         case '−':
         case '+':
-            if (!num1) {
-                num1 = parseInt(screenText);
-                console.log(`num1 = ${num1}`);
-            } else {
-                num2 = parseInt(screenText);
-                console.log(`num2 = ${num2}`)
-            }
-            if (num1 && num2) {
-                operate(num1, num2, symbol);
-            }
-            screenText = '';
-            lastOperator = symbol;
-            break;
-        case '=':
-            if (!lastOperator) {
+            if (screenText === '') {
                 return;
             }
-            screenText = runningTotal.toString();
-            renderScreen();
-            reset();
+            handleMath(symbol);
+            break;
+        case '=':
+            if (!previousOperator || screenText === '') {
+                return;
+            }
+            handleMath(symbol);
             break;
     }
 }
@@ -67,31 +61,36 @@ function handleNumber(num) {
     renderScreen();
 }
 
-function operate (num1, num2, lastOperator) {
-    switch(lastOperator) {
-        case '÷':
-            runningTotal = num1 / num2;
-            break;
-        case '×':
-            runningTotal = num1 * num2;
-            break;
-        case '−':
-            runningTotal = num1 - num2;
-            break;
-        case '+':
-            runningTotal = num1 + num2;
-            break;
+function handleMath(operator) {
+    const intScreenText = parseFloat(screenText);
+    if (!previousOperator) {
+        runningTotal = intScreenText;
     }
+    else {
+        operate(intScreenText);
+    }
+    previousOperator = operator;
     screenText = runningTotal.toString();
     renderScreen();
-    num1 = runningTotal;
-    console.log(`num1 = ${num1}`);
+    screenText = ''
 }
 
-function reset() {
-    num1 = null;
-    num2 = null;
-    runningTotal = 0;
+function operate(intScreenText) {
+    switch(previousOperator) {
+        case '÷':
+            runningTotal /= intScreenText;
+            break;
+        case '×':
+            runningTotal *= intScreenText;
+            break;
+        case '−':
+            runningTotal -= intScreenText;
+            break;
+        case '+':
+            runningTotal += intScreenText;
+            break;
+    }
+    runningTotal = Math.round(runningTotal * 10000000000) / 10000000000;
 }
 
 function renderScreen() {
